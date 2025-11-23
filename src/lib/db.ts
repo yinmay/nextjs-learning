@@ -1,5 +1,6 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import * as schema from './schema';
 
 // Lazy initialization to allow environment variables to be loaded first
 let db: ReturnType<typeof drizzle> | null = null;
@@ -10,7 +11,7 @@ function getDb() {
       throw new Error('DB_URL environment variable is not set');
     }
     const client = postgres(process.env.DB_URL);
-    db = drizzle(client);
+    db = drizzle(client, { schema });
   }
   return db;
 }

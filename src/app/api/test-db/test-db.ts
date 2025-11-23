@@ -4,7 +4,7 @@ config();
 
 // Now import other modules
 import { sql } from 'drizzle-orm';
-import { db } from './src/lib/db';
+import { db } from '../../../lib/db';
 
 async function testConnection() {
   try {
