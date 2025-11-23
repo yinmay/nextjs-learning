@@ -1,28 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Next.js Learning Project
+
+A [Next.js](https://nextjs.org) learning project with PostgreSQL database integration using Drizzle ORM.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router + Pages Router)
+- **Database**: PostgreSQL
+- **ORM**: Drizzle ORM
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env
+DB_URL=your_postgresql_connection_string
+```
+
+### 3. Run Database Migrations
+
+```bash
+npx drizzle-kit generate
+npx drizzle-kit push
+```
+
+### 4. Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Database Schema
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Users Table
+- `id`: UUID (Primary Key)
+- `username`: Text (Unique)
+- `email`: Text (Unique)
+- `image`: Text (Optional)
+- `intro`: Text (Optional)
+- `createdAt`: Timestamp
+- `updatedAt`: Timestamp
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Blog Table
+- `id`: UUID (Primary Key)
+- `title`: Text
+- `content`: Text
+- `thumbup`: Integer (Default: 0)
+- `userId`: UUID (Foreign Key → users.id)
+- `createdAt`: Timestamp
+- `updatedAt`: Timestamp
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API Routes
+
+### Test Database Connection
+- **GET** `/api/test-db` - Test database connection and view table info
+
+### Users
+- **POST** `/api/users` - Create test users
+
+### Blog
+- **API routes** available in `/api/blog`
 
 ## Learn More
 
