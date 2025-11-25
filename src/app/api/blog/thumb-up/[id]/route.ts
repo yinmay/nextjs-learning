@@ -1,21 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { blogs } from '@/lib/schema';
+import { eq, sql } from 'drizzle-orm';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
+  try {
+    const { id } = await params;
 
-  // You can also get the request body if needed
-  // const body = await request.json();
+    const database = db();
 
-  // Here you would typically update the thumb-up count in your database
-  // For now, we'll just return a success response with the id
+    // Increment thumbup count by 1
+    const [updatedBlog] = await database
+      .update(blogs)
+      .set({
+        thumbup: sql`${blogs.thumbup} + 1`,
+      })
+      .where(eq(blogs.id, id))
+      .returning();
 
-  return NextResponse.json({
-    errno: 0,
-    data: {
-        id
+    if (!updatedBlog) {
+      return NextResponse.json({
+        errno: -1,
+        message: 'Blog post not found',
+      });
     }
-  });
+
+    return NextResponse.json({
+      errno: 0,
+      data: {
+        id: updatedBlog.id,
+        thumbup: updatedBlog.thumbup,
+      },
+    });
+  } catch (error) {
+    return NextResponse.json({
+      errno: -1,
+      message: error instanceof Error ? error.message : 'Unknown error occurred',
+    });
+  }
 }
